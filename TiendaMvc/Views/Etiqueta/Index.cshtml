@@ -1,0 +1,83 @@
+﻿@using System.Collections.Generic
+@using System.Collections.Specialized
+@using TiendaMvc.Models
+@model List<Etiqueta> 
+
+@{
+    ViewBag.Title = "title";
+    var almacenes = ViewBag.almacenes as List<Almacen>;
+
+
+}
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h1>Etiquetas</h1>
+
+
+        @foreach (var et in Model)
+        {
+
+            <ul>
+                <h3>@et.nombre</h3>
+
+                <li>
+                    @foreach (var pro in et.Producto)
+                {
+                        <li>@pro.nombre</li>
+                    }
+                </li>
+            </ul>
+
+
+        }
+
+    </div>
+
+    <div class="col-md-3">
+        <h1>Almacenes</h1>
+        <ul>
+            <li>
+                @foreach (var alm in almacenes)
+            {
+                    <h3>@alm.nombre</h3>
+                }
+            </li>
+        </ul>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    @*@foreach (var item in Model)
+        {
+            @Html.Partial("_fichaAlmacen", item)
+        }*@
+
+
+    @*@section MiJavaScript
+        {
+            <script>
+                $(".borrame").click(function() {
+                    var r = confirm("Estas seguro?");
+                    if (r) {
+                        var id = $(this).attr("data-id");
+                        location.href = "@Url.Action("Borrar")" + "/" + id;
+
+
+                    }
+                });
+            </script>
+        }*@

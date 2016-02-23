@@ -1,0 +1,125 @@
+﻿@model IEnumerable<TiendaMvc.Models.Producto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Productos</h2>
+
+<span style="float: right">
+    <input type="text" id="txtBusqueda" placeholder="Texto a buscar..." />
+    <button type="button" class="btn btn-primary btn-sm" id="btnBus">
+        <span class="glyphicon glyphicon-search"></span> Buscar
+    </button>
+    
+
+</span>
+<br/>
+<br/>
+<button id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#dlgAdd">Añadir producto</button>
+<br/>
+<br/>
+<div id="listado">
+    @Html.Partial("_listadoProducto", Model)
+</div>
+
+@*<div>
+    <input type="text" id="txtNom" placeholder="Nombre"/>
+    <br/>
+    <input type="text" id="txtFab" placeholder="Fabricante" />
+    <br />
+    <input type="text" id="txtDesc" placeholder="Descripcion"/>
+    <br />
+    <input type="text" id="txtCost" placeholder="Coste"/>
+    <br />
+    <input type="text" id="txtVent" placeholder="Venta"/>
+    <br />
+
+    <input type="button" id="btnGuardar" value="Guardar"/>
+
+</div>*@
+
+<div class="modal fade" id="dlgAdd">                        @*VENTANA EMERGENTE DE DIÁLOGO*@
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Añadir Producto</h4>
+            </div>
+            <div class="modal-body">
+                
+                    <input type="text" id="txtNom" placeholder="Nombre" />
+                    <br />
+                    <input type="text" id="txtFab" placeholder="Fabricante" />
+                    <br />
+                    <input type="text" id="txtDesc" placeholder="Descripcion" />
+                    <br />
+                    <input type="text" id="txtCost" placeholder="Coste" />
+                    <br />
+                    <input type="text" id="txtVent" placeholder="Venta" />
+                    <br />
+
+
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+@section MiJavaScript                                
+{
+    <script>
+        function alta() {
+            var data = {
+                nombre: $("#txtNom").val(),
+                descripcion: $("#txtDesc").val(),
+                fabricante: $("#txtFab").val(),
+                precioCoste: $("#txtCost").val(),
+                precioVenta: $("#txtVent").val(),
+                idCategoria: 1
+            };
+
+            var url = "@Url.Action("Alta")";
+            var txt = JSON.stringify(data);
+            $.ajax({
+                url: url,
+                data: txt ,
+                type: "POST",
+                headers: {"Content-Type": "application/json"},
+                dataType: "json",
+                success: function(res) {
+                    if (res.idProducto > 0) {
+                        $("#txtBusqueda").val("");
+                        $("#dlgAdd").modal('hide');
+                        listado();
+                        console.log(res);
+                      
+                        
+                    } else {
+                        alert("Error al guardar");
+                    }
+                }
+
+            });
+
+        }
+
+          function listado () {
+            var url = "@Url.Action("Buscar")";
+            var txt = $("#txtBusqueda").val();
+            url += "?nombre=" + txt;
+
+            $("#listado").load(encodeURI(url));
+        }
+
+        $("#btnGuardar").click(alta);
+        $("#btnBus").click(listado);
+    </script>
+
+}
